@@ -26,8 +26,15 @@ import HexTool from '../components/tools/HexTool.tsx';
       <li><strong>MAC 地址</strong>：网卡硬件地址用 Hex 表示</li>
       <li><strong>Unicode</strong>：U+XXXX 是字符 Unicode 码点 Hex</li>
     </ul>
-    <h3>常见问答</h3>
-    <div class="faq-item"><div class="faq-q">为什么我的 Hex 解码后是乱码？</div><div class="faq-a">最常见原因是 Hex 字符数不是偶数（每 2 字符 = 1 字节），或原文不是 UTF-8 编码。请检查 Hex 字符串长度是否为偶数，并确认原编码。</div></div>
-    <div class="faq-item"><div class="faq-q">Hex 是加密吗？</div><div class="faq-a">不是。Hex 只是编码，任何人都能解码。它和 Base64 一样是表示二进制数据的方式，不能用于保护机密性。</div></div>
+    <h3>Hex 编码注意事项</h3>
+    <p>
+      <strong>Hex 不是加密</strong>：和 Base64 一样，Hex 只是编码方式，任何人都能解码，完全不提供保密性。Hex 常用于<strong>显示</strong>加密后的二进制结果——因为密文是二进制字节，直接显示是乱码，转成 Hex 才能以可读文本形式呈现。AES 加密的输出通常是 Base64 或 Hex，两者只是密文的不同表示，密文本身没变。
+    </p>
+    <p>
+      <strong>字节序问题</strong>：Hex 表示二进制时需注意字节序（endianness）。大端序（big-endian，网络字节序）高位在前，小端序（little-endian，x86/ARM 原生）低位在前。例如整数 0x4D2 在大端序 Hex 为 <code>04 D2</code>，小端序为 <code>D2 04</code>。网络协议通常用大端序，CPU 内部通常用小端序，跨平台传输需转换（如 <code>htonl</code>/<code>ntohl</code>）。查看二进制文件时要先确定字节序，否则解读会完全错误。
+    </p>
+    <p>
+      <strong>UTF-8 与中文</strong>：中文以 UTF-8 编码存储，每个汉字占 3 字节，即 6 个 Hex 字符。例如"中"的 UTF-8 编码为 <code>E4 B8 AD</code>，"文"为 <code>E6 96 87</code>。把 Hex 解码为文本时，必须知道原编码（UTF-8/GBK/UTF-16），否则会乱码。本工具固定使用 UTF-8解码，如果你的 Hex 是 GBK 编码的中文，需先转为 UTF-8 再用本工具。<strong>奇数长度</strong>错误是最常见的 Hex 解码失败原因——Hex 必须 2 个字符一组表示 1 字节，奇数个字符无法解析，请检查是否漏了字符。
+    </p>
   </div>
 </ToolLayout>

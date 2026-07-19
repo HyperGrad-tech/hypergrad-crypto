@@ -27,9 +27,15 @@ import TotpGenerator from '../components/tools/TotpGenerator.tsx';
       <li>VPN、堡垒机登录</li>
       <li>加密货币交易所提现</li>
     </ul>
-    <h3>常见问答</h3>
-    <div class="faq-item"><div class="faq-q">换了手机怎么办？</div><div class="faq-a">更换手机前必须导出 2FA 密钥或保存备份码。如果没有备份，只能通过账号"忘记 2FA"流程（通常需要身份验证）联系客服重置。</div></div>
-    <div class="faq-item"><div class="faq-q">TOTP 和短信验证码哪个更安全？</div><div class="faq-a">TOTP 更安全。短信验证码有 SIM 卡劫持、短信嗅探、运营商漏洞等风险。TOTP 密钥本地存储，无网络传输，物理隔离。</div></div>
-    <div class="faq-item"><div class="faq-q">为什么时间不同步口令就不对？</div><div class="faq-a">TOTP 依赖时间戳计算，服务端和客户端必须在 ±30 秒内同步。手机时间不准会导致口令失效。NTP 自动校时通常可解决。</div></div>
+    <h3>TOTP 安全注意事项</h3>
+    <p>
+      <strong>TOTP vs 短信验证码</strong>：TOTP 明显更安全。短信验证码存在 SIM 卡劫持（攻击者骗运营商补办你的 SIM 卡）、短信嗅探、运营商系统漏洞等风险，且 SMS 传输不加密。TOTP 密钥本地存储、计算离线完成、无网络传输，物理隔离于运营商系统。能选 TOTP 就不要选短信。
+    </p>
+    <p>
+      <strong>备份恢复码</strong>是启用 2FA 时必须保存的：每个服务都会给你一组一次性恢复码，当你丢失手机或 2FA 应用无法使用时，用恢复码登录。务必将这些恢复码保存在安全的地方（如本地加密笔记 DeepSeal），否则一旦丢失 2FA 设备，可能需要漫长的人工申诉才能找回账户。<strong>更换手机</strong>前必须先在旧手机导出 2FA 密钥或在服务端重新绑定，否则旧手机上的 2FA 密钥不会自动迁移到新手机。
+    </p>
+    <p>
+      <strong>密钥安全</strong>：TOTP 密钥等价于第二把密码，泄露后攻击者可在自己的设备上生成相同验证码。扫描二维码时注意周围环境，不要在公共场合展示。密钥应仅存在你控制的设备上，不要截图同步到云相册。本工具的密钥仅存在浏览器内存中，关闭页面即清除，不存储不传输。
+    </p>
   </div>
 </ToolLayout>

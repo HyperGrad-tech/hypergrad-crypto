@@ -19,9 +19,15 @@ import HashGenerator from '../components/tools/HashGenerator.tsx';
       <li><strong>SHA-3</strong>（256 位）：新一代 Keccak 算法，结构与 SHA-2 完全不同，作为 SHA-2 的备份方案。</li>
       <li><strong>RIPEMD-160</strong>（160 位）：比特币地址生成、PGP 指纹计算使用。</li>
     </ul>
-    <h3>常见问答</h3>
-    <div class="faq-item"><div class="faq-q">哈希和加密有什么区别？</div><div class="faq-a">哈希是单向的，无法从哈希值还原原文；加密是双向的，可解密。哈希用于校验完整性、密码存储；加密用于保护数据机密性。</div></div>
-    <div class="faq-item"><div class="faq-q">HMAC 是什么？</div><div class="faq-a">HMAC（Hash-based Message Authentication Code）是带密钥的哈希，用于验证消息完整性和真实性。只有知道密钥的人才能生成有效的 HMAC。微信支付、阿里云 API、GitHub Webhook 等签名都使用 HMAC-SHA256。</div></div>
-    <div class="faq-item"><div class="faq-q">可以用哈希存密码吗？</div><div class="faq-a">普通哈希存密码不安全，攻击者可以用彩虹表秒破。密码存储必须用专门算法如 bcrypt、scrypt、Argon2，它们内置 salt 和慢速计算，抵抗暴力破解。</div></div>
+    <h3>哈希的典型应用场景</h3>
+    <p>
+      哈希函数在现代计算中无处不在。<strong>文件完整性校验</strong>是最经典的用途——下载大文件后计算哈希与官方公布的对比，确保文件没被篡改。各大开源发行版官网都会提供 SHA-256 校验值。<strong>数字签名</strong>中，由于签名算法处理长数据很慢，通常先对数据做哈希再对哈希值签名，TLS 证书、PDF 签名都是如此。
+    </p>
+    <p>
+      <strong>密码存储</strong>场景需要特别注意：直接用 MD5/SHA-256 存密码极不安全，因为攻击者可以用彩虹表（预计算的哈希表）秒破。正确做法是使用专门的密码哈希算法（bcrypt、scrypt、Argon2），它们内置 salt 和可调节的计算成本，能有效抵抗暴力破解。<strong>区块链</strong>是哈希的另一大应用——工作量证明（挖矿）本质就是寻找使区块哈希小于目标值的 nonce，SHA-256 是比特币的核心哈希。<strong>Git</strong> 用 SHA-1（正迁移到 SHA-256）作为 commit、tree、blob 的唯一标识，实现内容寻址存储。
+    </p>
+    <p>
+      <strong>哈希碰撞</strong>是指两个不同输入产生相同哈希输出。MD5 和 SHA-1 已被证明可构造碰撞，不再安全。SHA-256 目前没有已知碰撞，理论碰撞概率为 2^-128（生日攻击），在可预见未来安全。选择哈希算法时，安全场景一律用 SHA-256 或更高。
+    </p>
   </div>
 </ToolLayout>

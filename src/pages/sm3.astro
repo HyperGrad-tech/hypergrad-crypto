@@ -26,8 +26,15 @@ import Sm3Tool from '../components/tools/Sm3Tool.tsx';
       <li>区块链：部分国产联盟链采用 SM3 替代 SHA-256</li>
       <li>身份认证：口令加盐哈希存储</li>
     </ul>
-    <h3>常见问答</h3>
-    <div class="faq-item"><div class="faq-q">SM3 与 SM2、SM4 是什么关系？</div><div class="faq-a">三者构成国密基础算法体系：SM2 是非对称加密（替代 RSA），SM4 是对称加密（替代 AES），SM3 是哈希（替代 SHA-256）。在等保合规中常配套使用。</div></div>
-    <div class="faq-item"><div class="faq-q">SM3 输出可以反推原文吗？</div><div class="faq-a">不能。SM3 是单向哈希函数，输出固定 256 位，无法从哈希值数学上反推任意长度原文。这是哈希函数的核心特性。</div></div>
+    <h3>国密算法体系</h3>
+    <p>
+      中国国密算法体系是一套完整的密码学标准，旨在关键领域实现自主可控。<strong>SM2</strong>（GM/T 0003）是基于椭圆曲线的非对称加密算法，密钥长度 256 位，安全强度相当于 RSA-3072，用于数字签名、密钥交换、公钥加密，替代 RSA/ECDSA。<strong>SM3</strong>（GM/T 0004）是密码杂凑算法，输出 256 位，替代 SHA-256。<strong>SM4</strong>（GM/T 0002）是分组对称加密，128 位密钥，替代 AES。三者配套使用，覆盖非对称、哈希、对称三大密码学需求。
+    </p>
+    <p>
+      <strong>SM3 的设计</strong>：SM3 采用 Merkle-Damgård 迭代结构，分组长度 512 位，共 64 轮压缩，输出 256 位摘要。虽然结构与 SHA-256 类似，但压缩函数、消息扩展、轮函数均针对抗密码分析重新设计。SM3 已通过国际密码学界的广泛分析，未发现实际攻击，安全性等同 SHA-256。
+    </p>
+    <p>
+      <strong>密码存储的特殊说明</strong>：和 SHA-256 一样，直接用 SM3 存储密码不安全，容易遭受彩虹表和暴力破解。密码存储应使用专门的慢速哈希算法（bcrypt、scrypt、Argon2）。国密合规场景中，如需用 SM3 派生密钥，可基于 SM3 实现 PBKDF2 类似的密钥派生函数，增加迭代次数和 salt 以抵抗暴力破解。GM/T 0062 提供了基于 SM3 的密码杂凑应用规范。
+    </p>
   </div>
 </ToolLayout>

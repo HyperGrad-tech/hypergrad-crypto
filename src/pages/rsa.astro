@@ -22,9 +22,15 @@ import RsaTool from '../components/tools/RsaTool.tsx';
       由于填充开销，RSA 单次加密的明文长度不能超过 <code>密钥字节数 - 11</code>。例如 2048 位（256 字节）密钥最多加密 245 字节明文。
       实践中超过此长度需分段加密或改用 <strong>混合加密</strong>：用 RSA 加密一个 AES 密钥，再用 AES 加密数据（TLS、PGP 都采用此方式）。
     </p>
-    <h3>常见问答</h3>
-    <div class="faq-item"><div class="faq-q">RSA 公钥可以公开发布吗？</div><div class="faq-a">可以。RSA 公钥设计上就是公开的，任何人都可以用它加密消息，但只能用对应的私钥（保密）解密。这正是非对称加密的核心优势。</div></div>
-    <div class="faq-item"><div class="faq-q">如何安全保管 RSA 私钥？</div><div class="faq-a">私钥泄露意味着所有用对应公钥加密的数据都可被解密。建议使用本地加密笔记应用（如 DeepSeal）保管私钥，或使用专门的密钥管理工具，永远不要通过邮件、聊天工具发送未加密的私钥。</div></div>
-    <div class="faq-item"><div class="faq-q">为什么我的私钥很大？</div><div class="faq-a">本工具生成的是 PKCS#8 格式私钥，OpenSSL 默认是 PKCS#1 格式，两者可互换。PEM 头部 <code>BEGIN PRIVATE KEY</code> 是 PKCS#8，<code>BEGIN RSA PRIVATE KEY</code> 是 PKCS#1。</div></div>
+    <h3>混合加密实践</h3>
+    <p>
+      RSA 速度远慢于 AES（约慢 100-1000 倍），因此加密大文件时直接使用 RSA 既低效又会触及长度限制。现代加密系统普遍采用<strong>混合加密（Hybrid Encryption）</strong>方案：首先随机生成一个一次性的 AES 会话密钥，用 AES 加密实际数据；然后用接收方的 RSA 公钥加密这个 AES 会话密钥；最后将加密的会话密钥与密文一同发送。接收方用私钥解密出 AES 密钥，再用它解密数据。
+    </p>
+    <p>
+      这正是 TLS/HTTPS、PGP/GPG、JWE（JSON Web Encryption）的工作方式。混合加密兼顾了 RSA 解决密钥分发问题的优势和 AES 加密大块数据的高效性。本工具适合 RSA 算法验证、小数据加密、密钥对测试。如需加密大文件，建议使用 PGP 工具，它内置了完整的混合加密流程。
+    </p>
+    <p>
+      <strong>私钥安全</strong>：RSA 私钥泄露意味着所有用对应公钥加密的数据都可被解密。建议使用本地加密笔记应用（如 DeepSeal）保管私钥，永远不要通过邮件、聊天工具发送未加密的私钥。生产环境的密钥应当存储在 HSM（硬件安全模块）或 KMS（密钥管理服务）中。
+    </p>
   </div>
 </ToolLayout>

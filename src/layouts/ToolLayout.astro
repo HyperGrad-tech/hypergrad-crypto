@@ -15,38 +15,75 @@ const tool: Tool | undefined = getTool(slug);
 if (!tool) {
   throw new Error(`Tool not found: ${slug}`);
 }
+
+const siteUrl = 'https://crypto.hypergrad.cn';
+const toolUrl = `${siteUrl}/${tool.slug}`;
+
+// 相关工具（过滤掉自身与不存在的 slug）
+const relatedTools = tool.related
+  .map(s => getTool(s))
+  .filter((t): t is Tool => Boolean(t) && t.slug !== tool.slug);
+
+// ===== 结构化数据 Schema（用 @graph 合并，单个 ld+json 脚本）====
+
+// 1. SoftwareApplication
+const appSchema = {
+  '@type': 'SoftwareApplication',
+  'name': tool.name,
+  'applicationCategory': 'SecurityApplication',
+  'operatingSystem': 'Web',
+  'description': tool.seoDescription,
+  'url': toolUrl,
+  'offers': { '@type': 'Offer', 'price': '0', 'priceCurrency': 'CNY' },
+  'publisher': { '@type': 'Organization', 'name': 'HyperGrad' },
+};
+
+// 2. BreadcrumbList
+const breadcrumbSchema = {
+  '@type': 'BreadcrumbList',
+  'itemListElement': [
+    { '@type': 'ListItem', 'position': 1, 'name': '首页', 'item': siteUrl },
+    { '@type': 'ListItem', 'position': 2, 'name': tool.category, 'item': `${siteUrl}/#${tool.category}` },
+    { '@type': 'ListItem', 'position': 3, 'name': tool.name, 'item': toolUrl },
+  ],
+};
+
+// 3. FAQPage（仅当有 FAQ 时生成）
+const faqSchema = tool.faq.length > 0
+  ? {
+      '@type': 'FAQPage',
+      'mainEntity': tool.faq.map(f => ({
+        '@type': 'Question',
+        'name': f.q,
+        'acceptedAnswer': { '@type': 'Answer', 'text': f.a },
+      })),
+    }
+  : null;
+
+const graphItems = faqSchema
+  ? [appSchema, breadcrumbSchema, faqSchema]
+  : [appSchema, breadcrumbSchema];
+
+const allSchema = {
+  '@context': 'https://schema.org',
+  '@graph': graphItems,
+};
 ---
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>{tool.name} — 在线{tool.shortName}工具 · HyperGrad Crypto</title>
-  <meta name="description" content={`${tool.desc} 100% 本地处理，数据不离开浏览器。`} />
+  <title>{tool.seoTitle}</title>
+  <meta name="description" content={tool.seoDescription} />
   <meta name="keywords" content={tool.keywords.join(', ')} />
-  <link rel="canonical" href={`https://crypto.hypergrad.cn/${tool.slug}`} />
+  <link rel="canonical" href={toolUrl} />
   <meta property="og:title" content={`${tool.name} — HyperGrad Crypto`} />
-  <meta property="og:description" content={tool.desc} />
+  <meta property="og:description" content={tool.seoDescription} />
   <meta property="og:type" content="website" />
-  <meta property="og:url" content={`https://crypto.hypergrad.cn/${tool.slug}`} />
+  <meta property="og:url" content={toolUrl} />
   <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-  <script type="application/ld+json" set:html={JSON.stringify({
-    '@context': 'https://schema.org',
-    '@type': 'SoftwareApplication',
-    'name': tool.name,
-    'applicationCategory': 'SecurityApplication',
-    'operatingSystem': 'Web',
-    'description': tool.desc,
-    'offers': {
-      '@type': 'Offer',
-      'price': '0',
-      'priceCurrency': 'CNY'
-    },
-    'publisher': {
-      '@type': 'Organization',
-      'name': 'HyperGrad'
-    }
-  })} />
+  <script type="application/ld+json" set:html={JSON.stringify(allSchema)} />
   <!-- Baidu Tongji（跨子域追踪 hypergrad.cn） -->
   <script is:inline>
 var _hmt = _hmt || [];
@@ -75,6 +112,15 @@ _hmt.push(['_setCookieDomain', '.hypergrad.cn']);
     <Sidebar />
 
     <main class="main">
+      <!-- 面包屑导航 -->
+      <nav class="breadcrumb" aria-label="面包屑导航">
+        <a href="/">首页</a>
+        <span class="breadcrumb-sep">/</span>
+        <span>{tool.category}</span>
+        <span class="breadcrumb-sep">/</span>
+        <span class="breadcrumb-current">{tool.name}</span>
+      </nav>
+
       <!-- 工具页头部 -->
       <div class="tool-header">
         <div class="tool-title-wrap">
@@ -97,10 +143,43 @@ _hmt.push(['_setCookieDomain', '.hypergrad.cn']);
         <slot />
       </div>
 
-      <!-- SEO 内容区 -->
+      <!-- SEO 内容区（页面补充富文本：原理、对比、用例） -->
       <div class="seo-content">
         <slot name="seo-content" />
       </div>
+
+      <!-- FAQ 常见问答（自动从 tools.ts 渲染，同步生成 FAQPage Schema） -->
+      {tool.faq.length > 0 && (
+        <section class="faq-section">
+          <h2>{tool.shortName} 常见问答</h2>
+          {tool.faq.map(f => (
+            <div class="faq-item">
+              <div class="faq-q">{f.q}</div>
+              <div class="faq-a">{f.a}</div>
+            </div>
+          ))}
+        </section>
+      )}
+
+      <!-- 相关工具（自动内链，传递页面权重） -->
+      {relatedTools.length > 0 && (
+        <section class="related-section">
+          <h2>相关工具</h2>
+          <div class="related-grid">
+            {relatedTools.map(rt => (
+              <a href={`/${rt.slug}`} class="tool-card-home">
+                <div class="card-icon">{rt.icon}</div>
+                <h3>{rt.name}</h3>
+                <p>{rt.desc}</p>
+                <div class="card-meta">
+                  <span>{rt.category}</span>
+                  <span>{rt.priority}</span>
+                </div>
+              </a>
+            ))}
+          </div>
+        </section>
+      )}
     </main>
   </div>
 

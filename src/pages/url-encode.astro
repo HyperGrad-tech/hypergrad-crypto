@@ -23,8 +23,15 @@ import UrlEncoder from '../components/tools/UrlEncoder.tsx';
       <li><strong>回调 URL</strong>：OAuth、支付回调中的 URL 参数本身是 URL，需要二次编码。</li>
       <li><strong>API 调试</strong>：调试含中文/特殊字符的 API 时正确编码避免乱码。</li>
     </ul>
-    <h3>常见问答</h3>
-    <div class="faq-item"><div class="faq-q">空格编码成 + 还是 %20？</div><div class="faq-a">两者都是合法的。HTML 表单（application/x-www-form-urlencoded）使用 +，纯 URL 中使用 %20。RFC 3986 推荐 %20。</div></div>
-    <div class="faq-item"><div class="faq-q">URL 编码与 Base64 编码有何区别？</div><div class="faq-a">URL 编码目标是将特殊字符转为 URL 安全字符，可能膨胀 3 倍（如中文字符）；Base64 是将二进制转为 ASCII 文本，固定膨胀 4/3。两者用途不同。</div></div>
+    <h3>URL 编码注意事项</h3>
+    <p>
+      <strong>空格编码</strong>有两种合法形式：<code>%20</code> 和 <code>+</code>。HTML 表单提交（Content-Type: application/x-www-form-urlencoded）用 + 表示空格；纯 URL 中 RFC 3986 推荐 %20。混用可能导致服务端解析错误——解码 %20 得到空格，解码 + 在表单上下文得到空格、在纯 URL 上下文得到字面 +。本工具使用 %20 以符合 RFC 3986 标准。
+    </p>
+    <p>
+      <strong>双重编码陷阱</strong>：如果 URL 被编码两次，% 会变成 %25，例如 <code>%20</code> 编码后变成 <code>%2520</code>，解码一次得到 <code>%20</code> 而非空格。这是常见 bug，通常由框架自动编码 + 手动编码叠加导致。调试时先检查编码层数。<strong>中文 URL</strong>：现代浏览器地址栏会显示中文（自动解码显示），但底层传输和复制出来都是编码形式。在 HTML 的 href 中建议使用编码后的 URL，尤其包含 & 等字符时，否则可能被解析为 HTML 实体。
+    </p>
+    <p>
+      <strong>与 Base64 的区别</strong>：URL 编码目标是让特殊字符在 URL 中安全传输，体积膨胀不固定（中文 3 倍）；Base64 是让二进制数据用 ASCII 表示，固定膨胀 4/3。两者场景不同，不可互换。如果要在 URL 中传 Base64 数据，需进一步用 Base64Url 变体（+ 换 -、/ 换 _），否则 + 会被解码为空格。
+    </p>
   </div>
 </ToolLayout>

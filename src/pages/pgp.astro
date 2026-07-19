@@ -24,9 +24,15 @@ import PgpTool from '../components/tools/PgpTool.tsx';
       <li><strong>安全通信</strong>：记者、活动家、律师保护通信隐私</li>
       <li><strong>密钥分发</strong>：开源项目维护者公开 PGP 公钥用于验证发布物</li>
     </ul>
-    <h3>常见问答</h3>
-    <div class="faq-item"><div class="faq-q">PGP 和 GPG 是一回事吗？</div><div class="faq-a">GPG（GnuPG）是 PGP 标准的开源实现。两者协议互通，密钥通用。商业 PGP 现已少见，GPG 是事实标准。</div></div>
-    <div class="faq-item"><div class="faq-q">PGP 私钥为什么这么大？</div><div class="faq-a">PGP 私钥包含 RSA 私钥因子 + 公钥因子 + 用户 ID + 签名等元数据，比单纯 RSA 私钥大几倍。Armored 格式还有 Base64 膨胀。</div></div>
-    <div class="faq-item"><div class="faq-q">公钥可以公开吗？</div><div class="faq-a">可以，PGP 公钥设计上就是要公开发布（如上传到 keyserver、GitHub、个人主页）。任何人都能用它加密消息给你，但只有你的私钥能解密。</div></div>
+    <h3>PGP 使用注意事项</h3>
+    <p>
+      <strong>密钥管理是 PGP 的核心难点</strong>。PGP 的公钥基础设施（Web of Trust，信任网络）与 X.509 证书体系不同——没有中心化 CA，而是通过用户互相签名公钥建立信任链。实践中，多数人直接通过可信渠道（官网、GitHub profile、名片二维码）获取公钥，而非严格走信任网络。获取公钥后务必通过指纹（fingerprint）核对，防止中间人替换公钥。
+    </p>
+    <p>
+      <strong>私钥保护</strong>：PGP 私钥用 passphrase 加密存储，passphrase 泄露 + 私钥文件泄露 = 完全沦陷。建议私钥仅存在本地加密存储中（如 DeepSeal），不要上传云盘或邮件。生成密钥时选择 4096 位 RSA 或 Curve25519（ECC）以获得长期安全。<strong>密钥轮换</strong>：定期（如每年）生成新的主密钥并发布转钥声明，旧密钥设置过期，降低密钥泄露影响。
+    </p>
+    <p>
+      <strong>实际使用</strong>：命令行用户常用 GnuPG（gpg 命令），图形界面可用 Kleopatra、GPG Suite。本工具适合无命令行经验的用户进行 PGP 加密解密——在浏览器中完成，私钥不落地。但请注意，浏览器环境不如本地 GPG 安全，重要密钥操作仍建议在离线环境用 GnuPG 完成。<strong>PGP 的局限</strong>：协议本身安全，但易用性差（邮件加密 UX 糟糕），且元数据（发件人、收件人、时间）不加密，可被流量分析。
+    </p>
   </div>
 </ToolLayout>

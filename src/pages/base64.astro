@@ -19,9 +19,15 @@ import Base64Tool from '../components/tools/Base64Tool.tsx';
       <li><strong>加密输出</strong>：AES/RSA 加密后的二进制密文转 Base64 便于传输与显示。</li>
       <li><strong>Basic Auth</strong>：HTTP 基本认证使用 Base64 编码用户名:密码。</li>
     </ul>
-    <h3>常见问答</h3>
-    <div class="faq-item"><div class="faq-q">Base64 让文件变大了多少？</div><div class="faq-a">Base64 编码后体积约为原数据的 4/3（约 +33%）。这是因为 3 字节二进制数据编码为 4 个 Base64 字符。</div></div>
-    <div class="faq-item"><div class="faq-q">Base64 算加密吗？</div><div class="faq-a">不算。Base64 只是编码，任何人都能解码。如果需要保护数据机密性，必须先加密再 Base64，不能仅靠 Base64。</div></div>
-    <div class="faq-item"><div class="faq-q">浏览器为什么有 atob/btoa 还要本工具？</div><div class="faq-a">浏览器原生 atob/btoa 不支持 UTF-8，处理中文会乱码。本工具用 TextEncoder/TextDecoder 包装，确保 UTF-8 字符正确处理。</div></div>
+    <h3>Base64 使用注意事项</h3>
+    <p>
+      <strong>Base64 不是加密</strong>——这是最重要的认知。任何人都能解码 Base64，它完全不提供保密性。如果你想保护数据，必须先用 AES/RSA 等真正的加密算法加密，再 Base64 编码。把 Base64 当加密用是最常见的新手错误。HTTP Basic Auth 用 Base64 传输"用户名:密码"，必须配合 HTTPS，否则等同于明文传输。
+    </p>
+    <p>
+      <strong>体积膨胀</strong>是 Base64 的必然代价：编码后数据约为原始大小的 4/3（+33%），因为每 3 字节二进制编码为 4 个 Base64 字符。这意味着把图片转 Base64 嵌入 HTML 会让 HTML 变大 33%，且无法被浏览器单独缓存。<strong>建议只对小图标（< 4KB）用 Data URL</strong>，大图仍应作为独立资源加载，利用浏览器缓存。CSS Sprites 或 SVG 图标通常比 Base64 更优。
+    </p>
+    <p>
+      <strong>UTF-8 处理</strong>：浏览器原生 <code>atob</code>/<code>btoa</code> 不支持 UTF-8，处理中文会乱码。本工具用 <code>TextEncoder</code>/<code>TextDecoder</code> 正确处理 UTF-8。还有 <strong>Base64Url</strong> 变体（将 + 换成 -、/ 换成 _、去掉 = 填充），用于 URL 安全场景，JWT 用的就是 Base64Url 而非标准 Base64。
+    </p>
   </div>
 </ToolLayout>

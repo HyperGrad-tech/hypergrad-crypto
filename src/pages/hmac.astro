@@ -19,9 +19,15 @@ import HmacGenerator from '../components/tools/HmacGenerator.tsx';
       <li><strong>Cookie 防伪</strong>：服务端用 HMAC 给 Cookie 签名防止伪造</li>
       <li><strong>TOTP 两步验证</strong>：基于 HMAC-SHA1 计算动态口令</li>
     </ul>
-    <h3>常见问答</h3>
-    <div class="faq-item"><div class="faq-q">HMAC 和普通 Hash 有什么区别？</div><div class="faq-a">普通 Hash 无密钥，任何人都能算；HMAC 有密钥，只有持密钥者才能生成有效认证码。所以 HMAC 可以验证发送者身份，而普通 Hash 只能验证内容完整性。</div></div>
-    <div class="faq-item"><div class="faq-q">HMAC-SHA256 推荐密钥长度是多少？</div><div class="faq-a">建议至少 32 字节（256 位）随机密钥，与哈希输出长度匹配。千万不要用 "123456"、密码、时间戳等弱密钥，会显著降低安全性。</div></div>
-    <div class="faq-item"><div class="faq-q">服务端如何验证 HMAC？</div><div class="faq-a">服务端用相同密钥对收到的消息重新计算 HMAC，与请求附带的 HMAC 比对（使用恒定时间比较，防止时序攻击）。一致则验证通过。</div></div>
+    <h3>API 签名实现要点</h3>
+    <p>
+      以 AWS Signature Version 4 为例，API 签名的典型流程是：将请求方法、URI、查询参数、头部、正文哈希按规范拼接成"规范请求"；再拼接"待签字符串"（含时间戳、credential scope）；最后用派生密钥（从长期密钥经多轮 HMAC 派生）对待签字符串计算 HMAC-SHA256，得到签名。服务端收到请求后用相同流程重算并比对，一致则放行。
+    </p>
+    <p>
+      实现时需注意几个安全要点：<strong>密钥必须保密</strong>，不可出现在 URL 或日志中；<strong>必须包含时间戳</strong>并校验时间窗口（通常 5-15 分钟），防止重放攻击；<strong>服务端比较签名必须用恒定时间比较</strong>（constant-time comparison），否则攻击者可通过响应时间差逐字节猜测签名（时序攻击）；新建系统推荐 HMAC-SHA256，HMAC-MD5 和 HMAC-SHA1 虽未发现实际攻击但已不推荐用于新项目。
+    </p>
+    <p>
+      <strong>Webhook 校验</strong>是另一常见场景。GitHub 会在每个 Webhook 请求的 <code>X-Hub-Signature-256</code> 头部附带 <code>sha256=</code> + HMAC-SHA256（用你在 GitHub 配置的 secret 作为密钥，请求 body 作为消息）。你的服务端用相同 secret 重算 HMAC 并与头部比对，即可验证请求确实来自 GitHub 而非伪造。
+    </p>
   </div>
 </ToolLayout>
