@@ -105,7 +105,7 @@ export default function PasswordGenerator() {
   }
 
   const strengthLabel = totalEntropy < 40 ? '弱' : totalEntropy < 60 ? '中' : totalEntropy < 80 ? '强' : '极强';
-  const strengthColor = totalEntropy < 40 ? 'var(--red)' : totalEntropy < 60 ? 'var(--amber)' : totalEntropy < 80 ? 'var(--green)' : '#1E3A5F';
+  const strengthColor = totalEntropy < 40 ? 'var(--red)' : totalEntropy < 60 ? 'var(--amber)' : totalEntropy < 80 ? 'var(--green)' : '#4F46E5';
   const strengthPct = Math.min(100, (totalEntropy / 128) * 100);
 
   return (

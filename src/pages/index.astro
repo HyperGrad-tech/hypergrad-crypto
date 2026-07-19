@@ -45,19 +45,9 @@ _hmt.push(['_setCookieDomain', '.hypergrad.cn']);
   <Header />
 
   <main class="main" style="max-width: var(--content-max); margin: 0 auto;">
-    <!-- Hero -->
-    <section class="home-hero">
-      <div class="privacy-badge">{totalTools} 个加密工具 · 100% 本地处理 · 数据不离开浏览器</div>
-      <h1>纯前端加密工具箱<br>密钥与原文永不外泄</h1>
-      <p>
-        AES、RSA、Hash、HMAC、SM4、SM3、PGP、JWT、TOTP…{totalTools} 个加解密、哈希、编码、国密、趣味密码工具。
-        所有计算在浏览器本地完成，不上传、不存储。与 DeepSeal 加密笔记应用同属 HyperGrad 生态。
-      </p>
-    </section>
-
-    <!-- 快速导航工具条 -->
+    <!-- 快速导航工具条（置顶，让用户进站即可点工具） -->
     <section class="quick-nav">
-      <div class="quick-nav-title">快速访问</div>
+      <div class="quick-nav-title">快速访问 · 全部 {totalTools} 个工具</div>
       <div class="quick-nav-chips">
         {tools.map(t => (
           <a href={`/${t.slug}`} class="quick-chip">
@@ -66,6 +56,12 @@ _hmt.push(['_setCookieDomain', '.hypergrad.cn']);
           </a>
         ))}
       </div>
+    </section>
+
+    <!-- Hero（精简为一行醒目标语） -->
+    <section class="home-hero home-hero-compact">
+      <h1>纯前端加密工具箱 · <span class="hero-accent">密钥与原文永不外泄</span></h1>
+      <div class="privacy-badge">{totalTools} 个工具 · 100% 本地处理 · 不上传 · 不存储</div>
     </section>
 
     <!-- 按优先级分区 -->
@@ -181,6 +177,29 @@ _hmt.push(['_setCookieDomain', '.hypergrad.cn']);
       border-color: var(--blue);
     }
     .quick-chip-icon { font-size: 14px; }
+
+    /* 精简版 hero：单行醒目标语 */
+    .home-hero-compact {
+      text-align: center;
+      padding: var(--space-xl) var(--space-lg) var(--space-lg);
+      margin-bottom: var(--space-xl);
+    }
+    .home-hero-compact h1 {
+      font-family: var(--font-sans);
+      font-size: 30px;
+      font-weight: 800;
+      color: var(--text);
+      line-height: 1.3;
+      margin: 0 0 var(--space-sm);
+      letter-spacing: -0.02em;
+    }
+    .home-hero-compact .hero-accent {
+      color: var(--blue);
+    }
+    .home-hero-compact .privacy-badge {
+      font-size: 13px;
+      padding: 6px 16px;
+    }
   </style>
 </body>
 </html>

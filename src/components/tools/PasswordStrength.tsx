@@ -63,7 +63,7 @@ function analyze(pwd: string) {
   else if (entropy < 36) { score = 2; label = '弱'; color = '#D9772E'; }
   else if (entropy < 60) { score = 3; label = '中'; color = '#C8862E'; }
   else if (entropy < 80) { score = 4; label = '强'; color = '#2D7A4F'; }
-  else { score = 5; label = '极强'; color = '#1E3A5F'; }
+  else { score = 5; label = '极强'; color = '#4F46E5'; }
 
   const issues: string[] = [];
   if (length < 8) issues.push('长度过短（建议至少 12 位）');
