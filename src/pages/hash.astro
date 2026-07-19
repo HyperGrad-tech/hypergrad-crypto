@@ -1,0 +1,27 @@
+---
+import ToolLayout from '../layouts/ToolLayout.astro';
+import HashGenerator from '../components/tools/HashGenerator.tsx';
+---
+<ToolLayout slug="hash">
+  <HashGenerator client:load />
+  <div slot="seo-content">
+    <h2>哈希生成器</h2>
+    <p>
+      同时生成 MD5、SHA-1、SHA-256、SHA-512、SHA-3、RIPEMD-160 六种哈希，支持 HMAC 带密钥哈希。哈希是单向不可逆函数，
+      相同输入永远产生相同输出，但无法从输出反推输入。常用于完整性校验、密码存储、数字签名、区块链等场景。
+    </p>
+    <h3>算法对比</h3>
+    <ul>
+      <li><strong>MD5</strong>（128 位）：已不安全，存在碰撞，仅用于非安全场景的校验和。</li>
+      <li><strong>SHA-1</strong>（160 位）：已被攻破，2017 年 Google 公布 SHAttered 碰撞，不推荐用于新场景。</li>
+      <li><strong>SHA-256</strong>（256 位）：当前主流，用于区块链、TLS 证书、密码加盐哈希。</li>
+      <li><strong>SHA-512</strong>（512 位）：更长，安全性更高，但速度稍慢。</li>
+      <li><strong>SHA-3</strong>（256 位）：新一代 Keccak 算法，结构与 SHA-2 完全不同，作为 SHA-2 的备份方案。</li>
+      <li><strong>RIPEMD-160</strong>（160 位）：比特币地址生成、PGP 指纹计算使用。</li>
+    </ul>
+    <h3>常见问答</h3>
+    <div class="faq-item"><div class="faq-q">哈希和加密有什么区别？</div><div class="faq-a">哈希是单向的，无法从哈希值还原原文；加密是双向的，可解密。哈希用于校验完整性、密码存储；加密用于保护数据机密性。</div></div>
+    <div class="faq-item"><div class="faq-q">HMAC 是什么？</div><div class="faq-a">HMAC（Hash-based Message Authentication Code）是带密钥的哈希，用于验证消息完整性和真实性。只有知道密钥的人才能生成有效的 HMAC。微信支付、阿里云 API、GitHub Webhook 等签名都使用 HMAC-SHA256。</div></div>
+    <div class="faq-item"><div class="faq-q">可以用哈希存密码吗？</div><div class="faq-a">普通哈希存密码不安全，攻击者可以用彩虹表秒破。密码存储必须用专门算法如 bcrypt、scrypt、Argon2，它们内置 salt 和慢速计算，抵抗暴力破解。</div></div>
+  </div>
+</ToolLayout>

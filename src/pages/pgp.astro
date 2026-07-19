@@ -1,0 +1,32 @@
+---
+import ToolLayout from '../layouts/ToolLayout.astro';
+import PgpTool from '../components/tools/PgpTool.tsx';
+---
+<ToolLayout slug="pgp">
+  <PgpTool client:load />
+  <div slot="seo-content">
+    <h2>PGP 加密 / 解密在线工具</h2>
+    <p>
+      PGP（Pretty Good Privacy）是由 Phil Zimmermann 于 1991 年发布的加密方案，基于非对称加密，
+      是电子邮件、文件加密、开源协作（如 GitHub 提交签名）的事实标准。本工具基于 <strong>OpenPGP.js</strong> 实现，
+      支持密钥对生成（RSA 1024/2048/4096）、公钥加密、私钥解密，输出 ASCII Armored 格式。
+    </p>
+    <h3>PGP 与 RSA 的关系</h3>
+    <p>
+      PGP 是一套完整的加密协议，底层可用 RSA、DSA、ECC 等多种非对称算法。PGP 包装了密钥管理、混合加密、签名、压缩等功能。
+      相比直接用 RSA，PGP 更适合加密长文件（混合加密：用 RSA 加密 AES 会话密钥，用 AES 加密数据）。
+    </p>
+    <h3>常见应用场景</h3>
+    <ul>
+      <li><strong>加密邮件</strong>：与 ProtonMail、Tutanota 等加密邮箱互发加密邮件</li>
+      <li><strong>文件加密</strong>：加密本地敏感文件给特定收件人</li>
+      <li><strong>代码签名</strong>：GitHub 用 GPG/PGP 密钥对 commit 签名</li>
+      <li><strong>安全通信</strong>：记者、活动家、律师保护通信隐私</li>
+      <li><strong>密钥分发</strong>：开源项目维护者公开 PGP 公钥用于验证发布物</li>
+    </ul>
+    <h3>常见问答</h3>
+    <div class="faq-item"><div class="faq-q">PGP 和 GPG 是一回事吗？</div><div class="faq-a">GPG（GnuPG）是 PGP 标准的开源实现。两者协议互通，密钥通用。商业 PGP 现已少见，GPG 是事实标准。</div></div>
+    <div class="faq-item"><div class="faq-q">PGP 私钥为什么这么大？</div><div class="faq-a">PGP 私钥包含 RSA 私钥因子 + 公钥因子 + 用户 ID + 签名等元数据，比单纯 RSA 私钥大几倍。Armored 格式还有 Base64 膨胀。</div></div>
+    <div class="faq-item"><div class="faq-q">公钥可以公开吗？</div><div class="faq-a">可以，PGP 公钥设计上就是要公开发布（如上传到 keyserver、GitHub、个人主页）。任何人都能用它加密消息给你，但只有你的私钥能解密。</div></div>
+  </div>
+</ToolLayout>

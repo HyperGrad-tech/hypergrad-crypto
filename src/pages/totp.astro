@@ -1,0 +1,35 @@
+---
+import ToolLayout from '../layouts/ToolLayout.astro';
+import TotpGenerator from '../components/tools/TotpGenerator.tsx';
+---
+<ToolLayout slug="totp">
+  <TotpGenerator client:load />
+  <div slot="seo-content">
+    <h2>TOTP 两步验证码生成器</h2>
+    <p>
+      TOTP（Time-based One-Time Password，RFC 6238）是基于时间的一次性密码算法，是大多数两步验证（2FA）应用的底层算法。
+      通过用户密钥 + 当前时间戳计算 6 位动态口令，每 30 秒刷新一次。Google Authenticator、Microsoft Authenticator、Authy 都使用 TOTP。
+      本工具兼容标准 TOTP 实现，密钥不会上传。
+    </p>
+    <h3>TOTP 工作原理</h3>
+    <ol>
+      <li>用户开启 2FA 时，服务端生成随机密钥（Base32 编码）。</li>
+      <li>密钥以二维码（otpauth:// URI）形式给用户扫描，存入手机 2FA 应用。</li>
+      <li>登录时，服务端和手机各自用密钥 + 当前时间戳（除以 30）计算 HMAC-SHA1。</li>
+      <li>从 HMAC 结果中取特定位置的 4 字节，转为 6 位数字。</li>
+      <li>双方时间窗口内有效（默认 30 秒，可能允许前后 1 个窗口防止时钟漂移）。</li>
+    </ol>
+    <h3>常见应用</h3>
+    <ul>
+      <li>Google / Microsoft / Apple 账户登录</li>
+      <li>GitHub / GitLab 仓库访问</li>
+      <li>银行、支付平台二次验证</li>
+      <li>VPN、堡垒机登录</li>
+      <li>加密货币交易所提现</li>
+    </ul>
+    <h3>常见问答</h3>
+    <div class="faq-item"><div class="faq-q">换了手机怎么办？</div><div class="faq-a">更换手机前必须导出 2FA 密钥或保存备份码。如果没有备份，只能通过账号"忘记 2FA"流程（通常需要身份验证）联系客服重置。</div></div>
+    <div class="faq-item"><div class="faq-q">TOTP 和短信验证码哪个更安全？</div><div class="faq-a">TOTP 更安全。短信验证码有 SIM 卡劫持、短信嗅探、运营商漏洞等风险。TOTP 密钥本地存储，无网络传输，物理隔离。</div></div>
+    <div class="faq-item"><div class="faq-q">为什么时间不同步口令就不对？</div><div class="faq-a">TOTP 依赖时间戳计算，服务端和客户端必须在 ±30 秒内同步。手机时间不准会导致口令失效。NTP 自动校时通常可解决。</div></div>
+  </div>
+</ToolLayout>

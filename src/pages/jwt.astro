@@ -1,0 +1,35 @@
+---
+import ToolLayout from '../layouts/ToolLayout.astro';
+import JwtParser from '../components/tools/JwtParser.tsx';
+---
+<ToolLayout slug="jwt">
+  <JwtParser client:load />
+  <div slot="seo-content">
+    <h2>JWT 解析器</h2>
+    <p>
+      JWT（JSON Web Token，RFC 7519）是一种用于在网络应用之间安全传递声明的开放标准，常用于身份认证和信息交换。
+      JWT 由三部分组成：<strong>Header</strong>.<strong>Payload</strong>.<strong>Signature</strong>，用 <code>.</code> 分隔，
+      前两部分是 Base64Url 编码的 JSON，第三部分是用密钥计算的签名。
+    </p>
+    <h3>JWT 结构</h3>
+    <ul>
+      <li><strong>Header</strong>：声明 Token 类型和签名算法（如 HS256、RS256）。</li>
+      <li><strong>Payload</strong>：声明 Claims，包括标准声明（iss、sub、aud、exp、nbf、iat、jti）和自定义声明。</li>
+      <li><strong>Signature</strong>：用密钥对 Header + Payload 计算的签名，防篡改。</li>
+    </ul>
+    <h3>常见 Claims</h3>
+    <ul>
+      <li><code>iss</code>：签发者（Issuer）</li>
+      <li><code>sub</code>：主题（Subject），通常是用户 ID</li>
+      <li><code>aud</code>：受众（Audience）</li>
+      <li><code>exp</code>：过期时间（Expiration），Unix 时间戳</li>
+      <li><code>nbf</code>：生效时间（Not Before）</li>
+      <li><code>iat</code>：签发时间（Issued At）</li>
+      <li><code>jti</code>：JWT 唯一 ID（防重放）</li>
+    </ul>
+    <h3>常见问答</h3>
+    <div class="faq-item"><div class="faq-q">JWT 是加密的吗？</div><div class="faq-a">不是。JWT 默认只签名不加密，任何人都能读取 Header 和 Payload 内容（Base64 解码即可）。如果需要加密内容，请使用 JWE（JSON Web Encryption）。</div></div>
+    <div class="faq-item"><div class="faq-q">为什么 Token 不能太长？</div><div class="faq-a">浏览器对 Cookie/HTTP Header 有长度限制（一般 4-8KB）。超长 Token 会触发解析失败或请求被拒。Payload 应只放必要字段，不要放大量业务数据。</div></div>
+    <div class="faq-item"><div class="faq-q">JWT 和 Session 有什么区别？</div><div class="faq-a">Session 状态存服务端，需通过 Cookie 或 Session ID 关联；JWT 无状态，所有信息在 Token 内，适合分布式、跨域、移动端场景。但 JWT 一旦签发无法撤销（除非维护黑名单）。</div></div>
+  </div>
+</ToolLayout>

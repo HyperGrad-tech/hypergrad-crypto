@@ -1,0 +1,27 @@
+---
+import ToolLayout from '../layouts/ToolLayout.astro';
+import Base64Tool from '../components/tools/Base64Tool.tsx';
+---
+<ToolLayout slug="base64">
+  <Base64Tool client:load />
+  <div slot="seo-content">
+    <h2>Base64 在线编解码</h2>
+    <p>
+      Base64 是一种将二进制数据表示为 ASCII 字符串的编码方式，使用 64 个可打印字符（A-Z、a-z、0-9、+、/）。
+      严格来说 Base64 不是加密算法（任何人都能解码），但常与加密场景搭配（如加密后输出的二进制需转 Base64 才能放进 JSON/文本）。
+      本工具支持 UTF-8 安全编解码，并可处理图片与 Base64 Data URL 互转。
+    </p>
+    <h3>常见应用</h3>
+    <ul>
+      <li><strong>图片内嵌</strong>：将小图片转 Base64 嵌入 HTML/CSS，减少 HTTP 请求（Data URL）。</li>
+      <li><strong>JWT Token</strong>：JSON Web Token 的 Header 和 Payload 用 Base64Url 编码。</li>
+      <li><strong>邮件附件</strong>：MIME 协议用 Base64 编码二进制附件以适配 SMTP 文本传输。</li>
+      <li><strong>加密输出</strong>：AES/RSA 加密后的二进制密文转 Base64 便于传输与显示。</li>
+      <li><strong>Basic Auth</strong>：HTTP 基本认证使用 Base64 编码用户名:密码。</li>
+    </ul>
+    <h3>常见问答</h3>
+    <div class="faq-item"><div class="faq-q">Base64 让文件变大了多少？</div><div class="faq-a">Base64 编码后体积约为原数据的 4/3（约 +33%）。这是因为 3 字节二进制数据编码为 4 个 Base64 字符。</div></div>
+    <div class="faq-item"><div class="faq-q">Base64 算加密吗？</div><div class="faq-a">不算。Base64 只是编码，任何人都能解码。如果需要保护数据机密性，必须先加密再 Base64，不能仅靠 Base64。</div></div>
+    <div class="faq-item"><div class="faq-q">浏览器为什么有 atob/btoa 还要本工具？</div><div class="faq-a">浏览器原生 atob/btoa 不支持 UTF-8，处理中文会乱码。本工具用 TextEncoder/TextDecoder 包装，确保 UTF-8 字符正确处理。</div></div>
+  </div>
+</ToolLayout>

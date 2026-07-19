@@ -1,0 +1,27 @@
+---
+import ToolLayout from '../layouts/ToolLayout.astro';
+import HmacGenerator from '../components/tools/HmacGenerator.tsx';
+---
+<ToolLayout slug="hmac">
+  <HmacGenerator client:load />
+  <div slot="seo-content">
+    <h2>HMAC 在线生成器</h2>
+    <p>
+      HMAC（Hash-based Message Authentication Code，基于哈希的消息认证码）使用密钥对消息进行哈希运算，输出固定长度的认证码。
+      它可以同时验证<strong>消息完整性</strong>（未被篡改）和<strong>消息真实性</strong>（来自持密钥者）。
+      本工具支持 HMAC-MD5、HMAC-SHA1、HMAC-SHA256、HMAC-SHA512、HMAC-SHA3 五种算法。
+    </p>
+    <h3>典型应用场景</h3>
+    <ul>
+      <li><strong>API 签名</strong>：阿里云、腾讯云、AWS 等云服务 API 调用使用 HMAC-SHA256 防篡改</li>
+      <li><strong>Webhook 校验</strong>：GitHub、Stripe、微信支付通过 HMAC 签名验证请求来源</li>
+      <li><strong>JWT 签名</strong>：HS256 算法本质就是 HMAC-SHA256</li>
+      <li><strong>Cookie 防伪</strong>：服务端用 HMAC 给 Cookie 签名防止伪造</li>
+      <li><strong>TOTP 两步验证</strong>：基于 HMAC-SHA1 计算动态口令</li>
+    </ul>
+    <h3>常见问答</h3>
+    <div class="faq-item"><div class="faq-q">HMAC 和普通 Hash 有什么区别？</div><div class="faq-a">普通 Hash 无密钥，任何人都能算；HMAC 有密钥，只有持密钥者才能生成有效认证码。所以 HMAC 可以验证发送者身份，而普通 Hash 只能验证内容完整性。</div></div>
+    <div class="faq-item"><div class="faq-q">HMAC-SHA256 推荐密钥长度是多少？</div><div class="faq-a">建议至少 32 字节（256 位）随机密钥，与哈希输出长度匹配。千万不要用 "123456"、密码、时间戳等弱密钥，会显著降低安全性。</div></div>
+    <div class="faq-item"><div class="faq-q">服务端如何验证 HMAC？</div><div class="faq-a">服务端用相同密钥对收到的消息重新计算 HMAC，与请求附带的 HMAC 比对（使用恒定时间比较，防止时序攻击）。一致则验证通过。</div></div>
+  </div>
+</ToolLayout>

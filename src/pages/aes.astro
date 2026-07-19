@@ -1,0 +1,31 @@
+---
+import ToolLayout from '../layouts/ToolLayout.astro';
+import AesTool from '../components/tools/AesTool.tsx';
+---
+<ToolLayout slug="aes">
+  <AesTool client:load />
+  <div slot="seo-content">
+    <h2>AES 加密 / 解密在线工具</h2>
+    <p>
+      AES（Advanced Encryption Standard，高级加密标准）是当前最广泛使用的对称加密算法，由美国国家标准与技术研究院（NIST）于 2001 年发布（FIPS 197）。
+      本工具支持 AES-128 / AES-192 / AES-256 三种密钥长度，CBC / ECB / CTR / OFB / CFB 五种工作模式，PKCS7 填充，输出可选 Base64 或 Hex。
+      所有运算在浏览器本地完成，密钥与明文不会离开你的设备。
+    </p>
+    <h3>密钥长度说明</h3>
+    <ul>
+      <li><strong>AES-128</strong>：16 字节密钥，10 轮迭代，性能最佳，安全充足。</li>
+      <li><strong>AES-192</strong>：24 字节密钥，12 轮，部分场景使用。</li>
+      <li><strong>AES-256</strong>：32 字节密钥，14 轮，最高安全等级，推荐用于长期数据保护。</li>
+    </ul>
+    <h3>模式选择</h3>
+    <ul>
+      <li><strong>CBC（推荐）</strong>：分组链接模式，需 16 字节 IV，相同明文产生不同密文。</li>
+      <li><strong>ECB</strong>：电子密码本，相同明文块产生相同密文块，<strong>不安全</strong>，仅在单块加密时使用。</li>
+      <li><strong>CTR</strong>：计数器模式，流密码，无需填充，并行加密高效。</li>
+      <li><strong>OFB / CFB</strong>：反馈模式，适用于流式数据。</li>
+    </ul>
+    <h3>常见问答</h3>
+    <div class="faq-item"><div class="faq-q">为什么密钥长度必须正好等于 128/192/256 位？</div><div class="faq-a">AES 是分组密码，密钥长度由算法规定，不可任意。本工具要求 UTF-8 字节长度精确等于 16/24/32 字节。如果需要用任意长度密码，建议先用 PBKDF2/Bcrypt 派生为标准长度密钥。</div></div>
+    <div class="faq-item"><div class="faq-q">IV 是什么？每次都不同可以吗？</div><div class="faq-a">IV（初始化向量）是 CBC/CTR 等模式必需的随机值，使相同明文+密钥产生不同密文。IV 应当每次加密随机生成且无需保密，但解密时需要相同的 IV，所以通常与密文一并存储。</div></div>
+  </div>
+</ToolLayout>

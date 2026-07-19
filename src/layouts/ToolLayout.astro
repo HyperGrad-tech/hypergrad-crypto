@@ -1,0 +1,109 @@
+---
+import '../styles/global.css';
+import Header from '../components/Header.astro';
+import Sidebar from '../components/Sidebar.astro';
+import Footer from '../components/Footer.astro';
+import { getTool, type Tool } from '../data/tools';
+
+export interface Props {
+  slug: string;
+}
+
+const { slug } = Astro.props;
+const tool: Tool | undefined = getTool(slug);
+
+if (!tool) {
+  throw new Error(`Tool not found: ${slug}`);
+}
+---
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{tool.name} — 在线{tool.shortName}工具 · HyperGrad Crypto</title>
+  <meta name="description" content={`${tool.desc} 100% 本地处理，数据不离开浏览器。`} />
+  <meta name="keywords" content={tool.keywords.join(', ')} />
+  <link rel="canonical" href={`https://crypto.hypergrad.cn/${tool.slug}`} />
+  <meta property="og:title" content={`${tool.name} — HyperGrad Crypto`} />
+  <meta property="og:description" content={tool.desc} />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content={`https://crypto.hypergrad.cn/${tool.slug}`} />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <script type="application/ld+json" set:html={JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': 'SoftwareApplication',
+    'name': tool.name,
+    'applicationCategory': 'SecurityApplication',
+    'operatingSystem': 'Web',
+    'description': tool.desc,
+    'offers': {
+      '@type': 'Offer',
+      'price': '0',
+      'priceCurrency': 'CNY'
+    },
+    'publisher': {
+      '@type': 'Organization',
+      'name': 'HyperGrad'
+    }
+  })} />
+  <!-- Baidu Tongji（跨子域追踪 hypergrad.cn） -->
+  <script is:inline>
+var _hmt = _hmt || [];
+_hmt.push(['_setCookieDomain', '.hypergrad.cn']);
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?a778461c432b29b641ee950a9f686a65";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+  </script>
+</head>
+<body>
+  <!-- DeepSeal 推广条 -->
+  <div class="promo-banner" id="promo-banner">
+    <span>
+      <strong>DeepSeal</strong> — 本地加密笔记应用，你的隐私只有你说了算。
+      <a href="https://hypergrad.cn#pricing" target="_blank" rel="noopener">免费下载 →</a>
+    </span>
+    <span class="promo-close" onclick="document.getElementById('promo-banner').style.display='none'">×</span>
+  </div>
+
+  <Header />
+
+  <div class="layout">
+    <Sidebar />
+
+    <main class="main">
+      <!-- 工具页头部 -->
+      <div class="tool-header">
+        <div class="tool-title-wrap">
+          <div class="tool-icon-box">{tool.icon}</div>
+          <div>
+            <h1 class="tool-title">{tool.name}</h1>
+            <p class="tool-desc">{tool.desc}</p>
+          </div>
+        </div>
+        <span class={`tag tag-${tool.priority.toLowerCase()}`}>{tool.priority}</span>
+      </div>
+
+      <!-- 隐私徽章 -->
+      <div class="privacy-badge" style="margin-bottom: var(--space-lg);">
+        100% 本地处理 · 数据不离开浏览器
+      </div>
+
+      <!-- 工具主体（由各页面通过 slot 传入 React 组件） -->
+      <div class="tool-react-root">
+        <slot />
+      </div>
+
+      <!-- SEO 内容区 -->
+      <div class="seo-content">
+        <slot name="seo-content" />
+      </div>
+    </main>
+  </div>
+
+  <Footer />
+</body>
+</html>

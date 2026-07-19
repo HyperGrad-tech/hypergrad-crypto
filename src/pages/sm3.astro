@@ -1,0 +1,33 @@
+---
+import ToolLayout from '../layouts/ToolLayout.astro';
+import Sm3Tool from '../components/tools/Sm3Tool.tsx';
+---
+<ToolLayout slug="sm3">
+  <Sm3Tool client:load />
+  <div slot="seo-content">
+    <h2>SM3 国密哈希在线生成</h2>
+    <p>
+      SM3 是中国国家密码管理局发布的密码杂凑算法（GM/T 0004-2012），输出 256 位（32 字节）摘要，安全强度与 SHA-256 相当。
+      SM3 用于电子签名、数字证书、消息完整性校验等场景，是国密合规体系的核心哈希算法，与 SM2、SM4 配套形成完整密码学方案。
+    </p>
+    <h3>SM3 与 SHA-256 对比</h3>
+    <ul>
+      <li><strong>输出长度</strong>：均为 256 位。</li>
+      <li><strong>分组长度</strong>：均为 512 位。</li>
+      <li><strong>结构</strong>：SM3 用 Merkle-Damgård 结构；SHA-256 同。</li>
+      <li><strong>性能</strong>：相当，软件实现 SM3 略慢于 SHA-256。</li>
+      <li><strong>合规</strong>：SM3 是中国国密标准；SHA-256 是国际标准。</li>
+    </ul>
+    <h3>常见应用</h3>
+    <ul>
+      <li>电子签名：与 SM2 算法配套，对原文先 SM3 哈希再签名</li>
+      <li>数字证书：SM2 证书指纹用 SM3 计算</li>
+      <li>数据完整性校验：文件、消息防篡改</li>
+      <li>区块链：部分国产联盟链采用 SM3 替代 SHA-256</li>
+      <li>身份认证：口令加盐哈希存储</li>
+    </ul>
+    <h3>常见问答</h3>
+    <div class="faq-item"><div class="faq-q">SM3 与 SM2、SM4 是什么关系？</div><div class="faq-a">三者构成国密基础算法体系：SM2 是非对称加密（替代 RSA），SM4 是对称加密（替代 AES），SM3 是哈希（替代 SHA-256）。在等保合规中常配套使用。</div></div>
+    <div class="faq-item"><div class="faq-q">SM3 输出可以反推原文吗？</div><div class="faq-a">不能。SM3 是单向哈希函数，输出固定 256 位，无法从哈希值数学上反推任意长度原文。这是哈希函数的核心特性。</div></div>
+  </div>
+</ToolLayout>

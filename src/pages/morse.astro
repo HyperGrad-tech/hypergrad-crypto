@@ -1,0 +1,42 @@
+---
+import ToolLayout from '../layouts/ToolLayout.astro';
+import MorseCode from '../components/tools/MorseCode.tsx';
+---
+<ToolLayout slug="morse">
+  <MorseCode client:load />
+  <div slot="seo-content">
+    <h2>摩斯密码在线翻译器</h2>
+    <p>
+      摩斯电码（Morse Code）由萨缪尔·摩斯与美国物理学家约瑟夫·亨利、阿尔弗雷德·维尔于 1836 年发明，
+      最初用于电报传输。它用短信号（<code>·</code> 嘀）和长信号（<code>-</code> 嗒）的组合表示字母、数字、标点。
+      本工具支持文本与摩斯电码双向翻译，可调整播放速度（WPM），并内置常用摩斯电码表。
+    </p>
+    <h3>摩斯电码规则</h3>
+    <ul>
+      <li><strong>dit (·)</strong>：短信号，标准时长 1 单位</li>
+      <li><strong>dah (-)</strong>：长信号，标准时长 3 单位</li>
+      <li><strong>字符内间隔</strong>：1 单位（同字符的 . 或 - 之间）</li>
+      <li><strong>字符间隔</strong>：3 单位（字符之间空格）</li>
+      <li><strong>单词间隔</strong>：7 单位（用 <code>/</code> 表示）</li>
+    </ul>
+    <h3>WPM 速度标准</h3>
+    <ul>
+      <li><strong>5 WPM</strong>：初学者入门</li>
+      <li><strong>13 WPM</strong>：业余无线电操作员最低标准</li>
+      <li><strong>20 WPM</strong>：一般操作员水平</li>
+      <li><strong>30+ WPM</strong>：高级操作员</li>
+      <li><strong>40+ WPM</strong>：顶尖专家（多为军用）</li>
+    </ul>
+    <h3>历史与现代应用</h3>
+    <ul>
+      <li><strong>海上遇险</strong>：SOS（··· ――― ···）是国际通用求救信号</li>
+      <li><strong>业余无线电</strong>：CW 模式通信至今活跃</li>
+      <li><strong>残障辅助</strong>：视障、听障人士的交流工具</li>
+      <li><strong>嵌入式</strong>：低带宽、低功耗场景的简单通信</li>
+      <li><strong>CTF / 教学</strong>：密码学经典案例</li>
+    </ul>
+    <h3>常见问答</h3>
+    <div class="faq-item"><div class="faq-q">摩斯电码算加密吗？</div><div class="faq-a">不算。摩斯电码是编码方案，目的是通过电信号传输文本，不是保密。任何懂规则的人都能解读。但它常被用作趣味"加密"。</div></div>
+    <div class="faq-item"><div class="faq-q">为什么 SOS 是 ··· ――― ···？</div><div class="faq-a">SOS 不是任何单词缩写，而是因为它的摩斯码（三短三长三短）特征明显、易识别、易发送，在嘈杂电波中也易被识别为求救信号。</div></div>
+  </div>
+</ToolLayout>
