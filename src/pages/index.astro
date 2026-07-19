@@ -8,6 +8,31 @@ const priorityOrder: Priority[] = ['P0', 'P1', 'P2'];
 const totalTools = tools.length;
 import { getSisterSites } from '../data/sisterSites';
 const sisters = getSisterSites('crypto');
+
+const homeSchema = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://hypergrad.cn/#organization",
+      "name": "HyperGrad",
+      "url": "https://hypergrad.cn/",
+      "description": "HyperGrad 是一系列纯前端在线工具 + 本地加密笔记应用的集合站，专注隐私保护与本地化处理。"
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://crypto.hypergrad.cn/#website",
+      "url": "https://crypto.hypergrad.cn/",
+      "name": "HyperGrad Crypto — 纯前端加密工具箱 · AES/RSA/Hash/国密 · 100% 本地处理",
+      "description": "16 个加密在线工具：AES、RSA、Hash、HMAC、密码生成、Base64、URL 编码、JWT、TOTP、SM4、SM3、PGP、Hex、凯撒、摩斯。全部本地计算，数据不离开你的设备。",
+      "inLanguage": "zh-CN",
+      "publisher": {
+        "@id": "https://hypergrad.cn/#organization"
+      }
+    }
+  ]
+};
+
 ---
 <!DOCTYPE html>
 <html lang="zh-CN">
@@ -33,6 +58,9 @@ _hmt.push(['_setCookieDomain', '.hypergrad.cn']);
   s.parentNode.insertBefore(hm, s);
 })();
   </script>
+  <!-- home-schema:start -->
+  <script type="application/ld+json" set:html={JSON.stringify(homeSchema)} />
+  <!-- home-schema:end -->
 </head>
 <body>
   <!-- DeepSeal 推广条 -->
