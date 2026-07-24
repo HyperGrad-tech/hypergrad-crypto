@@ -44,14 +44,20 @@ interface CipherData {
   ct: string;   // base64 string (CryptoJS output)
 }
 
-// ===== base64url 工具 =====
+// ===== base64url 工具（支持中文等 UTF-8 字符）=====
 function b64urlEncode(str: string): string {
-  return btoa(str).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+  const bytes = new TextEncoder().encode(str);
+  let binary = '';
+  for (let i = 0; i < bytes.length; i++) binary += String.fromCharCode(bytes[i]);
+  return btoa(binary).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
 }
 function b64urlDecode(str: string): string {
   let s = str.replace(/-/g, '+').replace(/_/g, '/');
   while (s.length % 4 !== 0) s += '=';
-  return atob(s);
+  const binary = atob(s);
+  const bytes = new Uint8Array(binary.length);
+  for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+  return new TextDecoder().decode(bytes);
 }
 
 // ===== PBKDF2 密钥派生（使用 CryptoJS）=====
